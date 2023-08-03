@@ -1,0 +1,28 @@
+version: "3.9"
+
+volumes:
+  GOLANG_LIBRARY:
+
+services:
+  main:
+    build:
+      context: ./docker/golang
+    working_dir: /app
+    network_mode: host
+    volumes:
+      - type: volume
+        source: GOLANG_LIBRARY
+        target: /go
+      - type: bind
+        source: /etc/hostname
+        target: /etc/hostname
+        read_only: true
+      - type: bind
+        source: ./app
+        target: /app
+    environment:
+      - RECEIVE_PORT=24444
+    entrypoint:
+      - go
+      - run
+      - main.go
